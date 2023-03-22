@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Product_CRUD.Models;
 
 namespace Product_CRUD.Controllers;
 
@@ -7,20 +6,31 @@ namespace Product_CRUD.Controllers;
 [Route("[controller]")]
 public class ProductController : ControllerBase
 {
-    private readonly ILogger<ProductController> _logger;
-
-    public ProductController(ILogger<ProductController> logger)
+    [HttpGet("[action]")]
+    public ActionResult GetProducts(int? id, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice)
     {
-        _logger = logger;
+        return Ok();
     }
 
-    [HttpGet(Name = "GetAllProducts")]
-    public IEnumerable<Product> GetAllProducts()
+    [HttpGet("[action]")]
+    public ActionResult GetDrinks(int? id, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, decimal? minCapacity, decimal? maxCapacity, int? capacityUnit)
     {
-        var result = new List<Drink>();
+        return Ok();
+    }
 
-        result.Add(new Drink());
+    [HttpGet("[action]")]
+    public ActionResult GetFoods(int? id, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, decimal? minWeight, decimal? maxWeight, int? weightUnit)
+    {
+        var foods = BusinessLayer.Food.GetFoods(id, descriptionSearch, minPrice, maxPrice, minQuantity, maxQuantity, minFinalPrice, maxFinalPrice, minWeight, maxWeight, weightUnit);
 
-        return result;
+        if (foods == null || !foods.Any()) return NoContent();
+
+        return Ok(foods);
+    }
+
+    [HttpGet("[action]")]
+    public ActionResult GetClothings(int? id, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, int? size)
+    {
+        return Ok();
     }
 }
