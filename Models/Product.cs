@@ -10,14 +10,6 @@ namespace Product_CRUD.Models
 
         public int Quantity { get; set; }
 
-        public abstract decimal TypeTax { get; }
-
-        public decimal FinalPrice
-        {
-            get
-            {
-                return Price * Quantity + (Price * TypeTax);
-            }
-        }
+        public int ProductTypeId { get; set; }
     }
 }

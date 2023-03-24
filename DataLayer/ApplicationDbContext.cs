@@ -1,15 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Product_CRUD.Models;
 
 namespace Product_CRUD.DataLayer
 {
     public class ApplicationDbContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseInMemoryDatabase(databaseName: "InMemoryDB");
-        }
-
         public DbSet<Models.Drink> Drinks { get; set; }
 
         public DbSet<Models.Clothing> Clothings { get; set; }
@@ -23,5 +17,10 @@ namespace Product_CRUD.DataLayer
         public DbSet<Models.WeightUnity> WeightUnities { get; set; }
 
         public DbSet<Models.ProductType> ProductTypes { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseInMemoryDatabase(databaseName: "InMemoryDB");
+        }
     }
 }

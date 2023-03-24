@@ -4,8 +4,6 @@
     {
         public decimal Weight { get; set; }
 
-        public WeightUnity WeightUnit { get; set; } = new WeightUnity();
-
-        public override decimal TypeTax { get; } = 0.06M;
+        public int WeightUnitId { get; set; }
     }
 }

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product_CRUD", "Product_CRUD.csproj", "{E8C3E877-C6E5-4E60-8CA5-88C877006EDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product_CRUDTests", "..\Product_CRUDTests\Product_CRUDTests.csproj", "{872F963E-6ECC-4A61-9C03-F25CDB2881A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product_CRUDTests", "..\Product_CRUDTests\Product_CRUDTests.csproj", "{872F963E-6ECC-4A61-9C03-F25CDB2881A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
