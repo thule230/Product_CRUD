@@ -40,7 +40,7 @@ public class FoodController : ControllerBase
 
             return Created(string.Empty, newFoods);
         }
-        catch (Exception ex) when (ex.Message.Contains("One or more products submitted"))
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
         }
@@ -54,7 +54,41 @@ public class FoodController : ControllerBase
     [HttpPut("[action]")]
     public ActionResult UpdateFoods(IEnumerable<Models.Food> foods)
     {
-        return Ok();
+        try
+        {
+            BusinessLayer.Food.UpdateFoods(foods);
+
+            return Ok(foods);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    [HttpDelete("[action]")]
+    public ActionResult DeleteFoods(IEnumerable<int> ids)
+    {
+        try
+        {
+            BusinessLayer.Food.DeleteFoods(ids);
+
+            return Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 }
 

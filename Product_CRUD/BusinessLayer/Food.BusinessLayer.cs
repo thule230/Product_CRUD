@@ -30,7 +30,7 @@ namespace Product_CRUD.BusinessLayer
                                       foods.Price,
                                       foods.Quantity,
                                       foods.Weight,
-                                      FinalPrice = (foods.Price * foods.Quantity + (foods.Price * productTypes.TypeTax)),
+                                      FinalPrice = Product.GetFinalPrice(foods.Price, foods.Quantity, productTypes.TypeTax),
                                       weightUnit = new { weightUnits.Id, weightUnits.Description },
                                       productType = new { productTypes.Id, productTypes.Description, productTypes.TypeTax }
                                   };
@@ -47,7 +47,7 @@ namespace Product_CRUD.BusinessLayer
                     finalResults = finalResults.Where(finalResult => finalResult.FinalPrice <= maxFinalPrice.Value).ToList();
                 }
 
-                return resultsJoin;
+                return finalResults;
             }
             catch (Exception)
             {
@@ -59,27 +59,74 @@ namespace Product_CRUD.BusinessLayer
         {
             try
             {
-                var distinctsProductTypes = newFoods.Select(food => food.ProductTypeId).Distinct().ToList();
-
-                if (distinctsProductTypes.Where(productType => productType != Enumerators.ProductType.Food.GetId()).Any())
+                if (AllFoodsAreValid(newFoods))
                 {
-                    throw new Exception("One or more products submitted are not Food");
-                }
+                    var distinctsProductTypes = newFoods.Select(food => food.ProductTypeId).Distinct().ToList();
 
-                foreach (var food in newFoods)
-                {
-                    if (food.Weight < 0)
+                    if (distinctsProductTypes.Where(productType => productType != Enumerators.ProductType.Food.GetId()).Any())
                     {
-                        throw new Exception("One or more products submitted has negative weight");
+                        throw new ArgumentException("One or more foods submitted are not Food");
                     }
-                }
 
-                DataLayer.Food.AddFoods(newFoods);
+                    DataLayer.Food.AddFoods(newFoods);
+                }
             }
             catch (Exception)
             {
                 throw;
             }
+        }
+
+        public static void UpdateFoods(IEnumerable<Models.Food> foodsUpdated)
+        {
+            try
+            {
+                if (AllFoodsAreValid(foodsUpdated))
+                {
+                    var ids = foodsUpdated.Select(food => food.Id).ToList();
+                    var foodsToUpdate = DataLayer.Food.GetFoods(ids);
+
+                    foreach (var food in foodsToUpdate)
+                    {
+                        var foodToUpdate = foodsToUpdate.Where(food => food.Id == food.Id).Single();
+                        if (food.ProductTypeId != foodToUpdate.ProductTypeId)
+                        {
+                            throw new ArgumentException("One or more foods submitted are trying to change the ProductType");
+                        }
+                    }
+
+                    DataLayer.Food.UpdateFoods(foodsUpdated);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void DeleteFoods(IEnumerable<int> ids)
+        {
+            try
+            {
+                DataLayer.Food.DeleteFoods(ids);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private static bool AllFoodsAreValid(IEnumerable<Models.Food> foodsToValidate)
+        {
+            foreach (var food in foodsToValidate)
+            {
+                if (food.Weight < 0)
+                {
+                    throw new ArgumentException("One or more foods submitted has negative weight");
+                }
+            }
+
+            return true;
         }
     }
 }

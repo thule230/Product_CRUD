@@ -21,9 +21,9 @@
                     _ => throw new NotImplementedException()
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Could not find the id for TypeProduct " + productType, ex);
             }
         }
     }
