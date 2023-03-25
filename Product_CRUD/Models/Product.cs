@@ -1,6 +1,6 @@
 namespace Product_CRUD.Models
 {
-    public abstract class Product
+    public class Product
     {
         public int Id { get; set; }
 

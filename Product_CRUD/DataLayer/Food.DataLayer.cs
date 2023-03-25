@@ -2,7 +2,7 @@
 {
     public static class Food
     {
-        public static IEnumerable<Models.Food> GetFoods(IEnumerable<int>? ids = null, string? descriptionSearch = null, decimal? minPrice = null, decimal? maxPrice = null, int? minQuantity = null, int? maxQuantity = null, decimal? minWeight = null, decimal? maxWeight = null, int? weightUnit = null)
+        public static IEnumerable<Models.Food> Get(IEnumerable<int>? ids = null, string? descriptionSearch = null, decimal? minPrice = null, decimal? maxPrice = null, int? minQuantity = null, int? maxQuantity = null, decimal? minWeight = null, decimal? maxWeight = null, int? weightUnit = null)
         {
             try
             {
@@ -64,7 +64,7 @@
             }
         }
 
-        public static void AddFoods(IEnumerable<Models.Food> newFoods)
+        public static void Add(IEnumerable<Models.Food> newFoods)
         {
             try
             {
@@ -82,29 +82,29 @@
             }
         }
 
-        public static void UpdateFoods(IEnumerable<Models.Food> foodsUpdated)
+        public static void Update(IEnumerable<Models.Food> foodsNewValues)
         {
             try
             {
-                if (AllFoodsAreValid(foodsUpdated))
+                if (AllFoodsAreValid(foodsNewValues))
                 {
                     var context = new ApplicationDbContext();
 
-                    var ids = foodsUpdated.Select(foodsUpdated => foodsUpdated.Id).ToList();
+                    var ids = foodsNewValues.Select(foodNewValues => foodNewValues.Id).ToList();
 
-                    if (ids.Distinct().Count() != ids.Count())
+                    if (ids.Distinct().Count() != ids.Count)
                     {
                         throw new ArgumentException("One or more foods submitted are repeated");
                     }
 
-                    var foodsFound = GetFoods(ids);
+                    var foodsFound = Get(ids);
 
                     if (ids.Count != foodsFound.Count())
                     {
                         throw new ArgumentException("One or more foods submitted were not found");
                     }
 
-                    context.Foods.UpdateRange(foodsUpdated);
+                    context.Foods.UpdateRange(foodsNewValues);
                     context.SaveChanges();
                 }
             }
@@ -114,14 +114,14 @@
             }
         }
 
-        public static void DeleteFoods(IEnumerable<int> ids)
+        public static void Delete(IEnumerable<int> ids)
         {
             try
             {
                 var context = new ApplicationDbContext();
 
-                var foodsToDetelete = GetFoods(ids);
-                context.Foods.RemoveRange(foodsToDetelete);
+                var foodsToDelete = Get(ids);
+                context.Foods.RemoveRange(foodsToDelete);
 
                 context.SaveChanges();
             }
@@ -135,18 +135,18 @@
         {
             var distinctsProductTypes = foodsToValidate.Select(food => food.ProductTypeId).Distinct().ToList();
 
-            var productsTypesFounds = ProductType.GetProductTypes(distinctsProductTypes);
+            var productsTypesFounds = ProductType.Get(distinctsProductTypes);
 
             if (!productsTypesFounds.Any() || distinctsProductTypes.Count != productsTypesFounds.Count())
             {
                 throw new ArgumentException("One or more foods submitted has a invalid ProductType");
             }
 
-            var distinctsWeightUnits = foodsToValidate.Select(food => food.WeightUnitId).Distinct().ToList();
+            var distinctsWeightUnities = foodsToValidate.Select(food => food.WeightUnitId).Distinct().ToList();
 
-            var WeightUnitsFounds = WeightUnity.GetWeightUnities(distinctsWeightUnits);
+            var weightUnitsFounds = WeightUnity.Get(distinctsWeightUnities);
 
-            if (!WeightUnitsFounds.Any() || distinctsWeightUnits.Count != WeightUnitsFounds.Count())
+            if (!weightUnitsFounds.Any() || distinctsWeightUnities.Count != weightUnitsFounds.Count())
             {
                 throw new ArgumentException("One or more foods submitted has a invalid WeightUnity");
             }

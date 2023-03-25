@@ -4,25 +4,25 @@ namespace Product_CRUD.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class FoodController : ControllerBase
+public class ClothingController : ControllerBase
 {
-    private readonly ILogger<FoodController> _logger;
+    private readonly ILogger<ClothingController> _logger;
 
-    public FoodController(ILogger<FoodController> logger)
+    public ClothingController(ILogger<ClothingController> logger)
     {
         _logger = logger;
     }
 
     [HttpGet("[action]")]
-    public ActionResult Get([FromQuery] IEnumerable<int>? ids, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, decimal? minWeight, decimal? maxWeight, int? weightUnit)
+    public ActionResult Get([FromQuery] IEnumerable<int>? ids, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, int? size)
     {
         try
         {
-            var foods = BusinessLayer.Food.Get(descriptionSearch, minPrice, maxPrice, minQuantity, maxQuantity, minFinalPrice, maxFinalPrice, minWeight, maxWeight, weightUnit, ids);
+            var clothings = BusinessLayer.Clothing.Get(descriptionSearch, minPrice, maxPrice, minQuantity, maxQuantity, minFinalPrice, maxFinalPrice, size, ids);
 
-            if (foods == null || !foods.Any()) return NoContent();
+            if (clothings == null || !clothings.Any()) return NoContent();
 
-            return Ok(foods);
+            return Ok(clothings);
         }
         catch (Exception ex)
         {
@@ -32,13 +32,13 @@ public class FoodController : ControllerBase
     }
 
     [HttpPost("[action]")]
-    public ActionResult Add([FromBody] IEnumerable<Models.Food> newFoods)
+    public ActionResult Add([FromBody] IEnumerable<Models.Clothing> newClothings)
     {
         try
         {
-            BusinessLayer.Food.Add(newFoods);
+            BusinessLayer.Clothing.Add(newClothings);
 
-            return Created(string.Empty, newFoods);
+            return Created(string.Empty, newClothings);
         }
         catch (ArgumentException ex)
         {
@@ -52,13 +52,13 @@ public class FoodController : ControllerBase
     }
 
     [HttpPut("[action]")]
-    public ActionResult Update(IEnumerable<Models.Food> foodsNewValues)
+    public ActionResult Update(IEnumerable<Models.Clothing> clothingsNewValues)
     {
         try
         {
-            BusinessLayer.Food.Update(foodsNewValues);
+            BusinessLayer.Clothing.Update(clothingsNewValues);
 
-            return Ok(foodsNewValues);
+            return Ok(clothingsNewValues);
         }
         catch (ArgumentException ex)
         {
@@ -76,7 +76,7 @@ public class FoodController : ControllerBase
     {
         try
         {
-            BusinessLayer.Food.Delete(ids);
+            BusinessLayer.Clothing.Delete(ids);
 
             return Ok();
         }

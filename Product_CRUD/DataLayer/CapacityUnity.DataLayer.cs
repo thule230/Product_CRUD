@@ -4,7 +4,7 @@ namespace Product_CRUD.DataLayer
 {
     public class CapacityUnity
     {
-        public static IEnumerable<Models.CapacityUnity> GetCapacityUnities(IEnumerable<int>? ids = null, string? description = null)
+        public static IEnumerable<Models.CapacityUnity> Get(IEnumerable<int>? ids = null, string? description = null)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Product_CRUD.DataLayer
             }
         }
 
-        public static IEnumerable<Models.CapacityUnity> AddCapacityUnities(IEnumerable<Models.CapacityUnity> newCapacityUnities)
+        public static IEnumerable<Models.CapacityUnity> Add(IEnumerable<Models.CapacityUnity> newCapacityUnities)
         {
             try
             {

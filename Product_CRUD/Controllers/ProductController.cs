@@ -6,21 +6,50 @@ namespace Product_CRUD.Controllers;
 [Route("[controller]")]
 public class ProductController : ControllerBase
 {
-    [HttpGet("[action]")]
-    public ActionResult GetProducts(int? id, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice)
+    private readonly ILogger<ProductController> _logger;
+
+    public ProductController(ILogger<ProductController> logger)
     {
-        return Ok();
+        _logger = logger;
     }
 
     [HttpGet("[action]")]
-    public ActionResult GetDrinks(int? id, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, decimal? minCapacity, decimal? maxCapacity, int? capacityUnit)
+    public ActionResult Get(string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice)
     {
-        return Ok();
+        try
+        {
+            var products = BusinessLayer.Clothing.Get(descriptionSearch, minPrice, maxPrice, minQuantity, maxQuantity, minFinalPrice, maxFinalPrice);
+            products = products.Concat(BusinessLayer.Drink.Get(descriptionSearch, minPrice, maxPrice, minQuantity, maxQuantity, minFinalPrice, maxFinalPrice));
+            products = products.Concat(BusinessLayer.Food.Get(descriptionSearch, minPrice, maxPrice, minQuantity, maxQuantity, minFinalPrice, maxFinalPrice));
+
+            if (!products.Any()) return NoContent();
+
+            return Ok(products);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 
-    [HttpGet("[action]")]
-    public ActionResult GetClothings(int? id, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, int? size)
+    [HttpDelete("[action]")]
+    public ActionResult Delete(IEnumerable<Models.Product> products)
     {
-        return Ok();
+        try
+        {
+            BusinessLayer.Product.Delete(products);
+
+            return Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 }

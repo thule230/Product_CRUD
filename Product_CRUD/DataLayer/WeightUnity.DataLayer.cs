@@ -2,7 +2,7 @@
 {
     public class WeightUnity
     {
-        public static IEnumerable<Models.WeightUnity> GetWeightUnities(IEnumerable<int>? ids = null, string? description = null)
+        public static IEnumerable<Models.WeightUnity> Get(IEnumerable<int>? ids = null, string? description = null)
         {
             try
             {
@@ -29,7 +29,7 @@
             }
         }
 
-        public static IEnumerable<Models.WeightUnity> AddWeightUnities(IEnumerable<Models.WeightUnity> newWeightUnities)
+        public static IEnumerable<Models.WeightUnity> Add(IEnumerable<Models.WeightUnity> newWeightUnities)
         {
             try
             {

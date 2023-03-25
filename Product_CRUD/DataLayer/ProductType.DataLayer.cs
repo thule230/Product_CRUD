@@ -2,7 +2,7 @@
 {
     public static class ProductType
     {
-        public static IEnumerable<Models.ProductType> GetProductTypes(IEnumerable<int>? ids = null, string? description = null)
+        public static IEnumerable<Models.ProductType> Get(IEnumerable<int>? ids = null, string? description = null)
         {
             try
             {
@@ -29,7 +29,7 @@
             }
         }
 
-        public static IEnumerable<Models.ProductType> AddProductType(IEnumerable<Models.ProductType> newProductTypes)
+        public static IEnumerable<Models.ProductType> Add(IEnumerable<Models.ProductType> newProductTypes)
         {
             try
             {

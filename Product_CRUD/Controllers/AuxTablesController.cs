@@ -9,7 +9,7 @@ public class AuxTablesController : ControllerBase
     [HttpPost("[action]")]
     public ActionResult PopulateAuxTables()
     {
-        if (!DataLayer.ProductType.GetProductTypes().Any())
+        if (!DataLayer.ProductType.Get().Any())
         {
             var productTypes = new List<Models.ProductType>
             {
@@ -17,10 +17,10 @@ public class AuxTablesController : ControllerBase
                 new Models.ProductType { Description = "Food", TypeTax = 0.06M },
                 new Models.ProductType { Description = "Clothing", TypeTax = 0.07M }
             };
-            DataLayer.ProductType.AddProductType(productTypes);
+            DataLayer.ProductType.Add(productTypes);
         }
 
-        if (!DataLayer.CapacityUnity.GetCapacityUnities().Any())
+        if (!DataLayer.CapacityUnity.Get().Any())
         {
             var capacityUnities = new List<Models.CapacityUnity>
             {
@@ -28,10 +28,10 @@ public class AuxTablesController : ControllerBase
                 new Models.CapacityUnity { Description = "mL" },
                 new Models.CapacityUnity { Description = "L" }
             };
-            DataLayer.CapacityUnity.AddCapacityUnities(capacityUnities);
+            DataLayer.CapacityUnity.Add(capacityUnities);
         }
 
-        if (!DataLayer.WeightUnity.GetWeightUnities().Any())
+        if (!DataLayer.WeightUnity.Get().Any())
         {
             var weightUnities = new List<Models.WeightUnity>
             {
@@ -39,10 +39,10 @@ public class AuxTablesController : ControllerBase
                 new Models.WeightUnity { Description = "g" },
                 new Models.WeightUnity { Description = "kg" }
             };
-            DataLayer.WeightUnity.AddWeightUnities(weightUnities);
+            DataLayer.WeightUnity.Add(weightUnities);
         }
 
-        if (!DataLayer.ClothingSize.GetClothingSizes().Any())
+        if (!DataLayer.ClothingSize.Get().Any())
         {
             var clothingSizes = new List<Models.ClothingSize>
             {
@@ -53,7 +53,7 @@ public class AuxTablesController : ControllerBase
                 new Models.ClothingSize { Description = "XL" }
             };
 
-            DataLayer.ClothingSize.AddClothingSizes(clothingSizes);
+            DataLayer.ClothingSize.Add(clothingSizes);
         }
 
         return Ok();
@@ -62,25 +62,25 @@ public class AuxTablesController : ControllerBase
     [HttpGet("[action]")]
     public ActionResult GetProductTypes()
     {
-        return Ok(DataLayer.ProductType.GetProductTypes());
+        return Ok(DataLayer.ProductType.Get());
     }
 
     [HttpGet("[action]")]
     public ActionResult GetCapacityUnities()
     {
-        return Ok(DataLayer.CapacityUnity.GetCapacityUnities());
+        return Ok(DataLayer.CapacityUnity.Get());
     }
 
     [HttpGet("[action]")]
     public ActionResult GetClothingSizes()
     {
-        return Ok(DataLayer.ClothingSize.GetClothingSizes());
+        return Ok(DataLayer.ClothingSize.Get());
     }
 
     [HttpGet("[action]")]
     public ActionResult GetWeightUnities()
     {
-        return Ok(DataLayer.WeightUnity.GetWeightUnities());
+        return Ok(DataLayer.WeightUnity.Get());
     }
 
 }

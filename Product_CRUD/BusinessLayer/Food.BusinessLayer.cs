@@ -4,25 +4,25 @@ namespace Product_CRUD.BusinessLayer
 {
     public static class Food
     {
-        public static IEnumerable<object> GetFoods(IEnumerable<int>? ids, string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, decimal? minWeight, decimal? maxWeight, int? weightUnit)
+        public static IEnumerable<object> Get(string? descriptionSearch, decimal? minPrice, decimal? maxPrice, int? minQuantity, int? maxQuantity, decimal? minFinalPrice, decimal? maxFinalPrice, decimal? minWeight = null, decimal? maxWeight = null, int? weightUnit = null, IEnumerable<int>? ids = null)
         {
             try
             {
-                var results = DataLayer.Food.GetFoods(ids, descriptionSearch, minPrice, maxPrice, minQuantity, maxQuantity, minWeight, maxWeight, weightUnit);
+                var results = DataLayer.Food.Get(ids, descriptionSearch, minPrice, maxPrice, minQuantity, maxQuantity, minWeight, maxWeight, weightUnit);
 
                 var productTypesIds = results.Select(result => result.ProductTypeId).Distinct().ToList();
 
-                var productTypesResults = DataLayer.ProductType.GetProductTypes(productTypesIds);
+                var productTypesResults = DataLayer.ProductType.Get(productTypesIds);
 
-                var weightUnitsIds = results.Select(result => result.WeightUnitId).Distinct().ToList();
+                var weightUnitiesIds = results.Select(result => result.WeightUnitId).Distinct().ToList();
 
-                var weightUnitsResult = DataLayer.WeightUnity.GetWeightUnities(weightUnitsIds);
+                var weightUnitiesResult = DataLayer.WeightUnity.Get(weightUnitiesIds);
 
                 var resultsJoin = from foods in results
                                   join productTypes in productTypesResults
                                   on foods.ProductTypeId equals productTypes.Id
-                                  join weightUnits in weightUnitsResult
-                                  on foods.WeightUnitId equals weightUnits.Id
+                                  join weightUnities in weightUnitiesResult
+                                  on foods.WeightUnitId equals weightUnities.Id
                                   select new
                                   {
                                       foods.Id,
@@ -31,8 +31,8 @@ namespace Product_CRUD.BusinessLayer
                                       foods.Quantity,
                                       foods.Weight,
                                       FinalPrice = Product.GetFinalPrice(foods.Price, foods.Quantity, productTypes.TypeTax),
-                                      weightUnit = new { weightUnits.Id, weightUnits.Description },
-                                      productType = new { productTypes.Id, productTypes.Description, productTypes.TypeTax }
+                                      WeightUnit = new { weightUnities.Id, weightUnities.Description },
+                                      ProductType = new { productTypes.Id, productTypes.Description, productTypes.TypeTax }
                                   };
 
                 var finalResults = resultsJoin.ToList();
@@ -55,7 +55,7 @@ namespace Product_CRUD.BusinessLayer
             }
         }
 
-        public static void AddFoods(IEnumerable<Models.Food> newFoods)
+        public static void Add(IEnumerable<Models.Food> newFoods)
         {
             try
             {
@@ -63,12 +63,12 @@ namespace Product_CRUD.BusinessLayer
                 {
                     var distinctsProductTypes = newFoods.Select(food => food.ProductTypeId).Distinct().ToList();
 
-                    if (distinctsProductTypes.Where(productType => productType != Enumerators.ProductType.Food.GetId()).Any())
+                    if (distinctsProductTypes.Where(productType => productType != ProductType.Food.GetId()).Any())
                     {
                         throw new ArgumentException("One or more foods submitted are not Food");
                     }
 
-                    DataLayer.Food.AddFoods(newFoods);
+                    DataLayer.Food.Add(newFoods);
                 }
             }
             catch (Exception)
@@ -77,25 +77,25 @@ namespace Product_CRUD.BusinessLayer
             }
         }
 
-        public static void UpdateFoods(IEnumerable<Models.Food> foodsUpdated)
+        public static void Update(IEnumerable<Models.Food> foodsNewValues)
         {
             try
             {
-                if (AllFoodsAreValid(foodsUpdated))
+                if (AllFoodsAreValid(foodsNewValues))
                 {
-                    var ids = foodsUpdated.Select(food => food.Id).ToList();
-                    var foodsToUpdate = DataLayer.Food.GetFoods(ids);
+                    var ids = foodsNewValues.Select(food => food.Id).ToList();
+                    var foodsToUpdate = DataLayer.Food.Get(ids);
 
                     foreach (var food in foodsToUpdate)
                     {
-                        var foodToUpdate = foodsToUpdate.Where(food => food.Id == food.Id).Single();
-                        if (food.ProductTypeId != foodToUpdate.ProductTypeId)
+                        var foodToUpdateFound = foodsToUpdate.Where(foodToUpdate => foodToUpdate.Id == food.Id).Single();
+                        if (food.ProductTypeId != foodToUpdateFound.ProductTypeId)
                         {
                             throw new ArgumentException("One or more foods submitted are trying to change the ProductType");
                         }
                     }
 
-                    DataLayer.Food.UpdateFoods(foodsUpdated);
+                    DataLayer.Food.Update(foodsNewValues);
                 }
             }
             catch (Exception)
@@ -104,11 +104,14 @@ namespace Product_CRUD.BusinessLayer
             }
         }
 
-        public static void DeleteFoods(IEnumerable<int> ids)
+        public static void Delete(IEnumerable<int> ids)
         {
             try
             {
-                DataLayer.Food.DeleteFoods(ids);
+                if (ids.Any())
+                {
+                    DataLayer.Food.Delete(ids);
+                }
             }
             catch (Exception)
             {

@@ -2,7 +2,7 @@
 {
     public class ClothingSize
     {
-        public static IEnumerable<Models.ClothingSize> GetClothingSizes(IEnumerable<int>? ids = null, string? description = null)
+        public static IEnumerable<Models.ClothingSize> Get(IEnumerable<int>? ids = null, string? description = null)
         {
             try
             {
@@ -29,7 +29,7 @@
             }
         }
 
-        public static IEnumerable<Models.ClothingSize> AddClothingSizes(IEnumerable<Models.ClothingSize> newClothingSizes)
+        public static IEnumerable<Models.ClothingSize> Add(IEnumerable<Models.ClothingSize> newClothingSizes)
         {
             try
             {

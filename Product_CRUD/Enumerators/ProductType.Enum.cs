@@ -15,9 +15,9 @@
             {
                 return productType switch
                 {
-                    ProductType.Food => DataLayer.ProductType.GetProductTypes(description: "Food").Single().Id,
-                    ProductType.Drink => DataLayer.ProductType.GetProductTypes(description: "Drink").Single().Id,
-                    ProductType.Clothing => DataLayer.ProductType.GetProductTypes(description: "Clothing").Single().Id,
+                    ProductType.Food => DataLayer.ProductType.Get(description: "Food").Single().Id,
+                    ProductType.Drink => DataLayer.ProductType.Get(description: "Drink").Single().Id,
+                    ProductType.Clothing => DataLayer.ProductType.Get(description: "Clothing").Single().Id,
                     _ => throw new NotImplementedException()
                 };
             }
